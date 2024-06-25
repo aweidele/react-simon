@@ -1,11 +1,10 @@
-import ButtonSvg from "./components/ButtonSvg";
-
+import GameBoard from "./components/GameBoard";
 export default function App() {
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-2xl mx-auto">
       <header className="App-header">
-        <h1>Start of the Simon game</h1>
-        <ButtonSvg />
+        <h1 className="text-center text-2xl">Start of the Simon game</h1>
+        <GameBoard />
       </header>
     </div>
   );
