@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import GameButton from "./GameButton";
 import dummySequence from "../data/dummy-sequence";
 
-const clr = ["green", "red", "blue", "yellow"];
+const colors = ["lime", "red", "blue", "yellow"];
+const rotate = ["", "rotate-90", "rotate-180", "-rotate-90"];
+const order = ["order-1", "order-2", "order-4", "order-3"];
 
 export default function GameBoard() {
   const [sequence, setSeqence] = useState(dummySequence);
@@ -34,6 +36,19 @@ export default function GameBoard() {
     }
   }, [gameState]);
 
+  const handlePlayerClick = (index) => {
+    if (index === sequence[sequenceTurn]) {
+      const nextTurn = sequenceTurn + 1;
+      if (nextTurn < sequence.length) {
+        setSequenceTurn((prevSequence) => nextTurn);
+      } else {
+        setSeqence((prevSequence) => [...prevSequence, Math.floor(Math.random() * 4)]);
+        setSequenceTurn((prevSequence) => 0);
+        setGameState("playback-on");
+      }
+    }
+  };
+
   const handleRestart = () => {
     setSequenceTurn((prevSequence) => 0);
     setGameState("playback-on");
@@ -42,22 +57,47 @@ export default function GameBoard() {
   return (
     <>
       <div className="grid grid-cols-2 grid-rows-2 my-8 p-4 rounded-full bg-slate-700">
-        <GameButton key="lime" color="lime" extraClasses="order-1" playbackRate={0.8} disabled={!isPlayerTurn} active={isPlaybackOn && sequence[sequenceTurn] === 0} />
-        <GameButton key="red" color="red" extraClasses=" order-2 rotate-90" playbackRate={1} disabled={!isPlayerTurn} active={isPlaybackOn && sequence[sequenceTurn] === 1} />
-        <GameButton key="blue" color="blue" extraClasses="order-4 rotate-180" playbackRate={1.2} disabled={!isPlayerTurn} active={isPlaybackOn && sequence[sequenceTurn] === 2} />
-        <GameButton key="yellow" color="yellow" extraClasses="order-3 -rotate-90" playbackRate={1.4} disabled={!isPlayerTurn} active={isPlaybackOn && sequence[sequenceTurn] === 3} />
+        {colors.map((color, index) => (
+          <GameButton onClick={() => handlePlayerClick(index)} key={color} color={color} disabled={!isPlayerTurn} active={isPlaybackOn && sequence[sequenceTurn] === index} extraClasses={`${rotate[index]} ${order[index]}`} />
+        ))}
       </div>
       <div className="absolute top-2 left-2">
         <ol>
           {sequence.map((turn, index) => (
             <li className={index === sequenceTurn && "font-bold"}>
-              {turn} - {clr[turn]}
+              {turn} - {colors[turn]}
             </li>
           ))}
         </ol>
-        <p>{sequence[sequenceTurn]}</p>
-        <p>{gameState}</p>
-        <p>Is playing? {isPlayback ? "Yes" : "No"}</p>
+        <table className="my-4">
+          <tr>
+            <td>
+              <strong>Sequence Turn</strong>
+            </td>
+            <td>{sequenceTurn}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Current:</strong>
+            </td>
+            <td>
+              {sequence[sequenceTurn]} - {colors[sequence[sequenceTurn]]}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Mode:</strong>
+            </td>
+            <td>{gameState}</td>
+          </tr>
+          <tr>
+            <td>
+              <strong>Is Playing</strong>
+            </td>
+            <td>Is playing? {isPlayback ? "Yes" : "No"}</td>
+          </tr>
+        </table>
+
         <button onClick={handleRestart} className="border p-2 my-8 hover:bg-slate-200">
           Restart
         </button>
