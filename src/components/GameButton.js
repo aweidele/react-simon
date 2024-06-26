@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import ButtonSvg from "./ButtonSvg";
-import useSound from "use-sound";
-import tone from "../assets/tone3.mp3";
+// import useSound from "use-sound";
+// import tone from "../assets/tone3.mp3";
 
 const buttonClasses = {
   lime: ["text-lime-500", "text-lime-800"],
@@ -24,12 +24,12 @@ export default function GameButton({ color, extraClasses = "", active = false, p
     buttonClass += `${buttonClasses[color][1]} ${extraClasses}`;
   }
 
-  const [play, { stop }] = useSound(tone, { playbackRate });
-  if (buttonActive) {
-    play();
-  } else {
-    stop();
-  }
+  // const [play, { stop }] = useSound(tone, { playbackRate });
+  // if (buttonActive) {
+  //   play();
+  // } else {
+  //   stop();
+  // }
 
   function handleButton(pressed) {
     if (pressed) {
