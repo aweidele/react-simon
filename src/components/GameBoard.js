@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import GameButton from "./GameButton";
 import dummySequence from "../data/dummy-sequence";
@@ -12,7 +13,7 @@ export default function GameBoard() {
   const [gameState, setGameState] = useState("playback-on");
   const [gameOverFlashCount, setGameOverFlashCount] = useState(0);
 
-  const isPlayback = gameState === "playback-on" || gameState === "playback-pause";
+  // const isPlayback = gameState === "playback-on" || gameState === "playback-pause";
   const isPlaybackOn = gameState === "playback-on" || gameState === "gameover-on" || gameState === "gameover" ? sequence[sequenceTurn] : null;
   const isPlayerTurn = gameState === "player-turn";
 
