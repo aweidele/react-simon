@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ButtonSvg from "./ButtonSvg";
-import useSound from "use-sound";
-import tone from "../assets/tone3.mp3";
+// import useSound from "use-sound";
+// import tone from "../assets/tone3.mp3";
 
 const buttonClasses = {
   lime: ["text-lime-600", "text-lime-900"],
@@ -10,22 +10,26 @@ const buttonClasses = {
   yellow: ["text-yellow-300", "text-yellow-600"],
 };
 
-export default function GameButton({ color, extraClasses = "", active = false, playbackRate = 1 }) {
+export default function GameButton({ color, extraClasses = "", active = false, playbackRate = 1, ...props }) {
   const [buttonActive, setButtonActive] = useState(active);
 
-  let buttonClass = "p-1 ";
+  useEffect(() => {
+    setButtonActive(active);
+  }, [active]);
+
+  let buttonClass = "p-1 relative transition-all ";
   if (buttonActive) {
     buttonClass += `${buttonClasses[color][0]} ${extraClasses}`;
   } else {
     buttonClass += `${buttonClasses[color][1]} ${extraClasses}`;
   }
 
-  const [play, { stop }] = useSound(tone, { playbackRate });
-  if (buttonActive) {
-    play();
-  } else {
-    // stop();
-  }
+  // const [play, { stop }] = useSound(tone, { playbackRate });
+  // if (buttonActive) {
+  //   play();
+  // } else {
+  //   stop();
+  // }
 
   function handleButton(pressed) {
     if (pressed) {
@@ -36,16 +40,20 @@ export default function GameButton({ color, extraClasses = "", active = false, p
   }
 
   return (
-    <button
-      className={buttonClass}
-      onMouseDown={() => {
-        handleButton(true);
-      }}
-      onMouseUp={() => {
-        handleButton(false);
-      }}
-    >
-      <ButtonSvg />
-    </button>
+    <>
+      <button
+        className={buttonClass}
+        onMouseDown={() => {
+          handleButton(true);
+        }}
+        onMouseUp={() => {
+          handleButton(false);
+        }}
+        {...props}
+      >
+        <ButtonSvg />
+        <span class="absolute text-white text-xsz-10 bottom-1 right-1">{buttonActive ? "📳" : "📴"}</span>
+      </button>
+    </>
   );
 }
