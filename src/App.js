@@ -2,9 +2,9 @@ import GameBoard from "./components/GameBoard";
 
 export default function App() {
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-xl mx-auto font-body">
       <header className="App-header">
-        <h1 className="text-center text-2xl">Start of the Simon game</h1>
+        <h1 className="text-center text-3xl my-8 uppercase tracking-widest">React Simon!</h1>
       </header>
       <GameBoard />
     </div>
