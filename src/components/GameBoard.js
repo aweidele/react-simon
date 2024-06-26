@@ -7,12 +7,13 @@ const rotate = ["", "rotate-90", "rotate-180", "-rotate-90"];
 const order = ["order-1", "order-2", "order-4", "order-3"];
 
 export default function GameBoard() {
-  const [sequence, setSeqence] = useState(dummySequence);
+  const [sequence, setSequence] = useState(dummySequence);
   const [sequenceTurn, setSequenceTurn] = useState(0);
   const [gameState, setGameState] = useState("playback-on");
+  const [gameOverFlashCount, setGameOverFlashCount] = useState(0);
 
   const isPlayback = gameState === "playback-on" || gameState === "playback-pause";
-  const isPlaybackOn = gameState === "playback-on";
+  const isPlaybackOn = gameState === "playback-on" || gameState === "gameover-on" || gameState === "gameover" ? sequence[sequenceTurn] : null;
   const isPlayerTurn = gameState === "player-turn";
 
   useEffect(() => {
@@ -33,8 +34,23 @@ export default function GameBoard() {
       setTimeout(() => {
         setGameState("playback-on");
       }, 250);
+    } else if (gameState === "gameover-on") {
+      setTimeout(() => {
+        setGameState("gameover-off");
+      }, 250);
+    } else if (gameState === "gameover-off") {
+      setTimeout(() => {
+        const flashCount = gameOverFlashCount + 1;
+        if (flashCount <= 2) {
+          setGameState("gameover-on");
+          setGameOverFlashCount((oldFlashCount) => flashCount);
+        } else {
+          setGameState("gameover");
+          setGameOverFlashCount((oldFlashCount) => 0);
+        }
+      }, 250);
     }
-  }, [gameState]);
+  }, [gameState, gameOverFlashCount]);
 
   const handlePlayerClick = (index) => {
     if (index === sequence[sequenceTurn]) {
@@ -42,11 +58,19 @@ export default function GameBoard() {
       if (nextTurn < sequence.length) {
         setSequenceTurn((prevSequence) => nextTurn);
       } else {
-        setSeqence((prevSequence) => [...prevSequence, Math.floor(Math.random() * 4)]);
+        setSequence((prevSequence) => [...prevSequence, Math.floor(Math.random() * 4)]);
         setSequenceTurn((prevSequence) => 0);
-        setGameState("playback-on");
+        setGameState("playback-pause");
       }
+    } else {
+      setGameState("gameover-on");
     }
+  };
+
+  const handleNewGame = () => {
+    setSequence((prevSequence) => [Math.floor(Math.random() * 4)]);
+    setSequenceTurn((prevSequence) => 0);
+    setGameState("playback-pause");
   };
 
   const handleRestart = () => {
@@ -56,12 +80,18 @@ export default function GameBoard() {
 
   return (
     <>
-      <div className="grid grid-cols-2 grid-rows-2 my-8 p-4 rounded-full bg-slate-700">
+      <div className="grid grid-cols-2 grid-rows-2 my-8 p-4 rounded-full bg-slate-900 relative">
         {colors.map((color, index) => (
-          <GameButton onClick={() => handlePlayerClick(index)} key={color} color={color} disabled={!isPlayerTurn} active={isPlaybackOn && sequence[sequenceTurn] === index} extraClasses={`${rotate[index]} ${order[index]}`} />
+          <GameButton onClick={() => handlePlayerClick(index)} key={color} color={color} disabled={!isPlayerTurn} active={isPlaybackOn === index} extraClasses={`${rotate[index]} ${order[index]}`} playbackRate={1 + 0.2 * (index - 1)} />
         ))}
+        {gameState === "gameover" && <div className="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 text-white z-20 tracking-[0.4em]">gameover</div>}
       </div>
-      <div className="absolute top-2 left-2">
+      <div class="flex justify-center">
+        <button onClick={handleNewGame} class="border p-4 border-slate-500 rounded hover:border-red-500 " disabled={gameState !== "gameover"}>
+          New Game
+        </button>
+      </div>
+      {/* <div className="absolute top-2 left-2 hidden">
         <ol>
           {sequence.map((turn, index) => (
             <li className={index === sequenceTurn && "font-bold"}>
@@ -96,12 +126,18 @@ export default function GameBoard() {
             </td>
             <td>Is playing? {isPlayback ? "Yes" : "No"}</td>
           </tr>
+          <tr>
+            <td>
+              <strong>Gameover FC</strong>
+            </td>
+            <td>{gameOverFlashCount}</td>
+          </tr>
         </table>
 
         <button onClick={handleRestart} className="border p-2 my-8 hover:bg-slate-200">
           Restart
         </button>
-      </div>
+      </div> */}
     </>
   );
 }
