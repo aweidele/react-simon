@@ -99,10 +99,10 @@ export default function GameBoard() {
           New Game
         </button>
         <p className="mt-4 text-xs flex justify-around">
-          <a href="https://www.aaronweidele.com" target="_blank">
+          <a href="https://www.aaronweidele.com" target="_blank" rel="noreferrer">
             https://www.aaronweidele.com
           </a>
-          <a href="https://github.com/aweidele/react-simon" target="_blank">
+          <a href="https://github.com/aweidele/react-simon" target="_blank" rel="noreferrer">
             https://github.com/aweidele/react-simon
           </a>
         </p>
