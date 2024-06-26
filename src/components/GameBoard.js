@@ -98,7 +98,10 @@ export default function GameBoard() {
         <button onClick={handleNewGame} class={`transition-all border p-4 border-slate-500 rounded hover:border-red-500${gameState !== "gameover" && " opacity-30"}`} disabled={gameState !== "gameover"}>
           New Game
         </button>
-        <p className="mt-4 text-xs">
+        <p className="mt-4 text-xs flex justify-around">
+          <a href="https://www.aaronweidele.com" target="_blank">
+            https://www.aaronweidele.com
+          </a>
           <a href="https://github.com/aweidele/react-simon" target="_blank">
             https://github.com/aweidele/react-simon
           </a>
