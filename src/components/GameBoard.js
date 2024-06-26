@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
 import GameButton from "./GameButton";
-import dummySequence from "../data/dummy-sequence";
+// import dummySequence from "../data/dummy-sequence";
 
 const colors = ["lime", "red", "blue", "yellow"];
 const rotate = ["", "rotate-90", "rotate-180", "-rotate-90"];
 const order = ["order-1", "order-2", "order-4", "order-3"];
 
 export default function GameBoard() {
-  const [sequence, setSequence] = useState(dummySequence);
+  const [sequence, setSequence] = useState([]);
   const [sequenceTurn, setSequenceTurn] = useState(0);
-  const [gameState, setGameState] = useState("playback-on");
+  const [gameState, setGameState] = useState("gameover");
   const [gameOverFlashCount, setGameOverFlashCount] = useState(0);
 
   // const isPlayback = gameState === "playback-on" || gameState === "playback-pause";
@@ -81,13 +81,20 @@ export default function GameBoard() {
 
   return (
     <>
-      <div className="grid grid-cols-2 grid-rows-2 my-8 p-4 rounded-full bg-slate-900 relative">
-        {colors.map((color, index) => (
-          <GameButton onClick={() => handlePlayerClick(index)} key={color} color={color} disabled={!isPlayerTurn} active={isPlaybackOn === index} extraClasses={`${rotate[index]} ${order[index]}`} playbackRate={1 + 0.2 * (index - 1)} />
-        ))}
-        {gameState === "gameover" && <div className="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 text-white z-20 tracking-[0.4em]">gameover</div>}
+      <div className="grow py-4 flex items-center">
+        <div className="grid grid-cols-2 grid-rows-2 p-4 rounded-full bg-slate-900 relative">
+          {colors.map((color, index) => (
+            <GameButton onClick={() => handlePlayerClick(index)} key={color} color={color} disabled={!isPlayerTurn} active={isPlaybackOn === index} extraClasses={`${rotate[index]} ${order[index]}`} playbackRate={1 + 0.2 * (index - 1)} />
+          ))}
+          {gameState === "gameover" && (
+            <div className="absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4 text-white z-20 text-center">
+              <p className="tracking-[0.4em]">gameover</p>
+              <p>You made it to {sequence.length} turns!</p>
+            </div>
+          )}
+        </div>
       </div>
-      <div class="flex justify-center">
+      <div class="flex justify-center p-4">
         <button onClick={handleNewGame} class="border p-4 border-slate-500 rounded hover:border-red-500 " disabled={gameState !== "gameover"}>
           New Game
         </button>
