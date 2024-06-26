@@ -73,10 +73,10 @@ export default function GameBoard() {
     setGameState("playback-pause");
   };
 
-  const handleRestart = () => {
-    setSequenceTurn((prevSequence) => 0);
-    setGameState("playback-on");
-  };
+  // const handleRestart = () => {
+  //   setSequenceTurn((prevSequence) => 0);
+  //   setGameState("playback-on");
+  // };
 
   return (
     <>
